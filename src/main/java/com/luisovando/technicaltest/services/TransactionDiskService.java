@@ -8,17 +8,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static java.lang.System.exit;
+
 @Service
 public class TransactionDiskService extends TransactionService {
 
-    private static final String FILENAME = "database.txt";
+    private static final String FILENAME = "/database.txt";
 
     private String pathFile;
 
     public TransactionDiskService() {
         Path currentRelativePath = Paths.get("");
         String path = currentRelativePath.toAbsolutePath().toString();
-        this.pathFile = path.concat("/src/main/resources/storage/" + TransactionDiskService.FILENAME);
+        this.pathFile = path.concat(TransactionDiskService.FILENAME);
     }
 
     @Override
@@ -53,7 +55,12 @@ public class TransactionDiskService extends TransactionService {
                     break;
                 }
             }
-        } catch (IOException e) {
+        }
+        catch (FileNotFoundException fnfe) {
+            System.out.println("File database not found, run create transaction action for create one.");
+            exit(0);
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         return transaction;
@@ -73,7 +80,12 @@ public class TransactionDiskService extends TransactionService {
                     transactions.add(transaction);
                 }
             }
-        } catch (IOException e) {
+        }
+        catch (FileNotFoundException fnfe) {
+            System.out.println("File database not found, run create transaction action for create one.");
+            exit(0);
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
 
